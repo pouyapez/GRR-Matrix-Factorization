@@ -72,9 +72,9 @@ def learn(Y, n, m, k, link, g_link, iters=5000, D=2, init_step=0.1,update_B = Tr
 	iters - number of iterations
 	"""
 	if tau:
-    	U,V,B=rnd_init(n,m,k,D,Y,link,g_link,init_step,beta,mini_batch_size,iters/1000)
+		U,V,B=rnd_init(n,m,k,D,Y,link,g_link,init_step,beta,mini_batch_size,iters/1000)
 	else:
-        U,V,B=rnd_init(n,m,k,D,Y,link,g_link,init_step,beta,mini_batch_size,iters/1000,tau=False)
+		U,V,B=rnd_init(n,m,k,D,Y,link,g_link,init_step,beta,mini_batch_size,iters/1000,tau=False)
 
 	errs = []
 	itr=10
@@ -83,10 +83,10 @@ def learn(Y, n, m, k, link, g_link, iters=5000, D=2, init_step=0.1,update_B = Tr
 	for itr in xrange(iters):
 		p=p+1
 		if (itr)%debug_every == 0: logging.info("Starting iteration %d of %d", (itr+1), iters)
-            if update_B :
-                U,V,B,err = learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step, beta, mini_batch_size,iteration=p)
-            else:
-                U,V,B,err = learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step, beta, mini_batch_size,update_B = False,iteration=p)
+		if update_B :
+			U,V,B,err = learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step, beta, mini_batch_size,iteration=p)
+		else:
+			U,V,B,err = learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step, beta, mini_batch_size,update_B = False,iteration=p)
 		errs.append(err)
 		if (itr)%debug_every == 0:
 			logging.info("%f %f %f %s", err, norm(U), norm(V), str(B))
