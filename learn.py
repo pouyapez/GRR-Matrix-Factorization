@@ -59,8 +59,7 @@ def read_params(dir,itr):
 
 
 
-def learn(Y, n, m, k, link, g_link, iters=5000, D=2, init_step=0.1,update_B = True,tau=True,
-	beta=0.002, mini_batch_size=-1, iter_f=None, debug_every=1):
+def learn(Y, n, m, k, link, g_link, iters=5000, D=2, init_step=0.1, update_B = True, tau=True, beta=0.002, mini_batch_size=-1, iter_f=None, debug_every=1):
 	"""Returns learnt parameters of matrix factorization.
 
 	Y - array of matrix cells: (i,j,v)
