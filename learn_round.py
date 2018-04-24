@@ -7,34 +7,34 @@ import math
 
 
 def logistic(x):
-    if x>=0:
-        return 1
-    else:
-        return 0
+	if x>=0:
+		return 1
+	else:
+		return 0
 
 
 def g_logistic(x): return 50.0/((np.exp(50*x/2)+np.exp(-50*x/2))*(np.exp(50*x/2)+np.exp(-50*x/2)))
 
 def hinge_inverse(x):
-    if x<0:
-        return 0
-    elif x>=0.01:
-        return x-0.005
-    else:
-        return 50*(x)**2
+	if x<0:
+		return 0
+	elif x>=0.01:
+		return x-0.005
+	else:
+		return 50*(x)**2
 
 
 
 def ghinge_inverse(x):
-    if x<0:
-        return 0
-    elif x>=0.01:
-        return 1
-    else:
-        return 100*x
+	if x<0:
+		return 0
+	elif x>=0.01:
+		return 1
+	else:
+		return 100*x
 
 def pred(Y,U,V,B,link):
-        import math
+	import math
 	D=len(B)+1
 	Yh = []
 	err = 0.0
@@ -66,10 +66,10 @@ def get_link(link_func):
 	return None
 
 def chunks(l, n):
-    """ Yield successive n-sized chunks from l.
-    """
-    for i in xrange(0, len(l), n):
-        yield l[i:i+n]
+	""" Yield successive n-sized chunks from l.
+	"""
+	for i in xrange(0, len(l), n):
+		yield l[i:i+n]
 
 
 
@@ -79,14 +79,14 @@ def objective(Y,U,V,B,link,beta):
 	for (i,j,v) in Y:
 		v=int(v)
 		if v==D-1:
-            vnew_up=B[D-2]+1## we are tring to find the upper bound of interval base on v / posetive infinity
-        else:
-            vnew_up=B[v]
-        if v==0:
-            vnew_down=B[0]-1## Lower bounds/ negetive infinity
-        else:
-            vnew_down=B[v-1]
-		ui = U[i]
+			vnew_up=B[D-2]+1## we are tring to find the upper bound of interval base on v / posetive infinity
+		else:
+			vnew_up=B[v]
+		if v==0:
+			vnew_down=B[0]-1## Lower bounds/ negetive infinity
+		else:
+			vnew_down=B[v-1]
+			ui = U[i]
 		vj = V[j]
 		uv = np.dot(ui, vj)
 		vhat = 0.0
@@ -96,18 +96,18 @@ def objective(Y,U,V,B,link,beta):
 
 
 def read_params(dir,itr):
-    import gzip
-    import cPickle as pickle
-    Uf=gzip.open(dir + "U." + str(itr) + ".pkl")
-    U=pickle.load(Uf)
-    Uf.close()
-    Vf=gzip.open(dir + "V." + str(itr) + ".pkl")
-    V=pickle.load(Vf)
-    Vf.close()
-    Bf=gzip.open(dir + "B." + str(itr) + ".pkl")
-    B=pickle.load(Bf)
-    Bf.close()
-    return U,V,B
+	import gzip
+	import cPickle as pickle
+	Uf=gzip.open(dir + "U." + str(itr) + ".pkl")
+	U=pickle.load(Uf)
+	Uf.close()
+	Vf=gzip.open(dir + "V." + str(itr) + ".pkl")
+	V=pickle.load(Vf)
+	Vf.close()
+	Bf=gzip.open(dir + "B." + str(itr) + ".pkl")
+	B=pickle.load(Bf)
+	Bf.close()
+	return U,V,B
 
 
 
@@ -122,10 +122,10 @@ def learn(Y, n, m, k, link, g_link, iters=5000, D=2, init_step=0.01,update_B = T
 	g_link - gradient of the link function
 	iters - number of iterations
 	"""
-    if tau:
-        U,V,B=rnd_init(n,m,k,D,Y,link,g_link,init_step,beta,mini_batch_size,iters/1000)
-    else:
-        U,V,B=rnd_init(n,m,k,D,Y,link,g_link,init_step,beta,mini_batch_size,iters/1000,tau=False)
+	if tau:
+		U,V,B=rnd_init(n,m,k,D,Y,link,g_link,init_step,beta,mini_batch_size,iters/1000)
+	else:
+		U,V,B=rnd_init(n,m,k,D,Y,link,g_link,init_step,beta,mini_batch_size,iters/1000,tau=False)
 	itr=19
 	errs = []
 	Cs=[]
@@ -133,30 +133,30 @@ def learn(Y, n, m, k, link, g_link, iters=5000, D=2, init_step=0.01,update_B = T
 	p=0
 	e=0
 	for itr in xrange(iters):
-        p=p+1
+		p=p+1
 		if (itr)%debug_every == 0: logging.info("Starting iteration %d of %d", (itr+1), iters)
 		if update_B:
-            U,V,B,err,C= learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step, beta, mini_batch_size,iteration=p)
-        else:
-            U,V,B,err,C= learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step, beta, mini_batch_size,iteration=p,update_B=False)
+			U,V,B,err,C= learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step, beta, mini_batch_size,iteration=p)
+		else:
+			U,V,B,err,C= learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step, beta, mini_batch_size,iteration=p,update_B=False)
 		errs.append(err)
 		Cs.append(C)
 		if p<0:
-            logging.info("%f %f %f %s", err, norm(U), norm(V), str(B))
-            if p < 100:
-                Yh = []
-                Yp=[]
-                erp = 0.0
-                for (i,j,v) in Y:
-                    ui = U[i]
-                    vj = V[j]
-                    uv = np.dot(ui, vj)
-                    vhat = 0.0
-                    for d in xrange(D-1):
-                        vhat += link(uv - B[d])
-                    erp += abs(v-vhat)
-                    Yh.append((i,j,vhat))
-                    Yp.append((i,j,uv))
+			logging.info("%f %f %f %s", err, norm(U), norm(V), str(B))
+			if p < 100:
+				Yh = []
+				Yp=[]
+				erp = 0.0
+				for (i,j,v) in Y:
+					ui = U[i]
+					vj = V[j]
+					uv = np.dot(ui, vj)
+					vhat = 0.0
+					for d in xrange(D-1):
+						vhat += link(uv - B[d])
+					erp += abs(v-vhat)
+					Yh.append((i,j,vhat))
+					Yp.append((i,j,uv))
             
 		if (itr)%debug_every == 0:
 			logging.info("%f %f %f %s", err, norm(U), norm(V), str(B))
@@ -167,8 +167,8 @@ def learn(Y, n, m, k, link, g_link, iters=5000, D=2, init_step=0.01,update_B = T
 def learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step=0.01, beta=0.0000001, 
 	mini_batch_size=-1,update_U = True, update_V = True, update_B = True,iteration=0 ):
 
-    T=1
-    import math
+	T=1
+	import math
 	if type(update_B) is bool:
 		up_B = [update_B for d in xrange(D-1)]
 		update_B = up_B
@@ -190,21 +190,21 @@ def learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step=0.01, beta=0.0000
 		gU = np.zeros((n,k))
 		gV = np.zeros((m,k))
 		gB = np.zeros(D-1)
-	 	for c in batch:
+		for c in batch:
 			(i,j,v) = c 
 			v=int(v)
 			if v==D-1:
-                u=0    
-                vnew_up=B[D-2]+T## we are tring to find the upper bound of interval base on v / posetive infinity
-            else:
-                u=1
-                vnew_up=B[v]
-            if v==0:
-                d=0
-                vnew_down=B[0]-T## Lower bounds/ negetive infinity
-            else:
-                d=1
-                vnew_down=B[v-1]
+				u=0    
+				vnew_up=B[D-2]+T## we are tring to find the upper bound of interval base on v / posetive infinity
+			else:
+				u=1
+				vnew_up=B[v]
+			if v==0:
+				d=0
+				vnew_down=B[0]-T## Lower bounds/ negetive infinity
+			else:
+				d=1
+				vnew_down=B[v-1]
 			ui = U[i]
 			vj = V[j]
 			uv = np.dot(ui, vj)
@@ -231,18 +231,18 @@ def learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step=0.01, beta=0.0000
 
 			# gradient wrt V  New version
 			if update_V:
-            	gV[j] += -ghinge_inverse(vnew_down-uv)*ui+ghinge_inverse(uv-vnew_up)*ui+ 2.0*beta*vj
+				gV[j] += -ghinge_inverse(vnew_down-uv)*ui+ghinge_inverse(uv-vnew_up)*ui+ 2.0*beta*vj
 
 #			# gradient wrt B[d]
-            if iteration%1==0:
-            	if update_B:
-                	if v==D-1:
-                    	gB[D-2]+=ghinge_inverse(vnew_down-uv)
-                    elif v==0:
-                        gB[0]+=-ghinge_inverse(uv-vnew_up)
-                    else:
-                        gB[v]+=-ghinge_inverse(uv-vnew_up)
-                        gB[v-1]+=ghinge_inverse(vnew_down-uv)
+			if iteration%1==0:
+				if update_B:
+					if v==D-1:
+						gB[D-2]+=ghinge_inverse(vnew_down-uv)
+					elif v==0:
+						gB[0]+=-ghinge_inverse(uv-vnew_up)
+					else:
+						gB[v]+=-ghinge_inverse(uv-vnew_up)
+						gB[v-1]+=ghinge_inverse(vnew_down-uv)
 
 		# update
 		batch_size = float(len(batch))
@@ -250,10 +250,10 @@ def learn_iter(Y, n, m, k, link, g_link, U, V, B, D, init_step=0.01, beta=0.0000
 		if update_V: V = V - step*gV/100#/(batch_size)
 		for d in xrange(D-1):
 			if update_B[d]:
-            	B[d] = B[d] - tep*gB[d]/1000#/(batch_size)
-        B=np.sort(B)
+				B[d] = B[d] - tep*gB[d]/1000#/(batch_size)
+		B=np.sort(B)
 	print a0,a1,a2,a3,a4,a5
-    C=objective(Y,U,V,B,link,beta)
+	C=objective(Y,U,V,B,link,beta)
 	return U,V,B,math.sqrt(err/len(Y)),C
 
 
@@ -262,9 +262,9 @@ def rnd_init(n,m,k,D,Y,link,g_link,init_step, beta,mini_batch_size,iters,tau= Tr
 	U = (np.random.rand(n,k)-0.5)/100.0
 	V = (np.random.rand(m,k)-0.5)/100.0
 	if tau:
-        B = np.array([float(d) for d in xrange(D-1)])
-    else:
-        B = np.array([0,1,2,3,4])
+		B = np.array([float(d) for d in xrange(D-1)])
+	else:
+		B = np.array([0,1,2,3,4])
 	return U,V,B
 
 def incr_init(n,m,k,D,Y,link,g_link,init_step,beta,mini_batch_size,iters):
