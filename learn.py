@@ -159,9 +159,9 @@ def rnd_init(n,m,k,D,Y,link,g_link,init_step, beta,mini_batch_size,iters,tau= Tr
 	U = (np.random.rand(n,k)-0.5)/100.0
 	V = (np.random.rand(m,k)-0.5)/100.0
 	if tau:
-        B = np.array([float(d) for d in xrange(D-1)])
-    else:
-        B = np.array([0])
+		B = np.array([float(d) for d in xrange(D-1)])
+	else:
+		B = np.array([0])
 	return U,V,B
 
 def incr_init(n,m,k,D,Y,link,g_link,init_step,beta,mini_batch_size,iters):
